@@ -1,0 +1,164 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <link href="~/Admin/lib/layui/css/layui.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    @*<script>
+        $(function () {
+            var options = '';
+            $.ajax({
+                type: "post",
+                url: "/Blog/GetBlog",
+                dataType: "json",
+                success: function (data) {
+                    if (data.data.length > 0) {
+                        //alert(data.data.length);
+                        for (var i = 0; i < data.data.length; i++) {
+                            //alert(data.data[i].Title)
+                            options += '<option value="' + data.data[i].AutoID + '">' + data.data[i].Title + '</option>';
+                        }
+                        $("#TitleId").html(options);
+                        console.log(options);
+                    }
+                }
+            });
+            
+        })
+    </script>*@
+</head>
+<body>
+    
+    <form class="">
+        <div class="layui-form-item">
+            <label class="layui-form-label">标题</label>
+            <div class="layui-input-inline">
+                <input type="text" name="title" id="TitleId" required lay-verify="required" placeholder="请输入标题" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">摘要</label>
+            <div class="layui-input-block">
+                <input type="text" name="title" id="TypeName" required lay-verify="required" placeholder="请输入摘要" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">文本域</label>
+            <div class="layui-input-block">
+                <textarea id="LAY_demo_editor" style="display: none;"></textarea>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit lay-filter="formDemo" id="demo1" data-type="content">立即提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </form>
+
+
+    <script src="~/Admin/lib/layui/layui.all.js"></script>
+    <script src="~/Admin/lib/layui/layui.js"></script>
+    <script src="~/Scripts/vue.js"></script>
+    <script src="~/Admin/lib/layui/axios.min.js"></script>
+    <script>
+
+
+        layui.use(['form', 'layedit'], function () {
+            var form = layui.form
+                , layer = layui.layer
+                , layedit = layui.layedit
+                , $ = layui.jquery;
+
+            layedit.set({
+                uploadImage: {
+                    url: '/Blog/UploadEditImg' //接口url
+                    , type: 'post' //默认post
+                }
+            });
+            //创建一个编辑器
+            var editIndex = layedit.build('LAY_demo_editor');
+
+            var active = {
+                content: function () {
+                    //alert($("#TitleId").val());
+                    //alert($("#TypeName").val());
+                    //alert(layedit.getText(editIndex));
+                    if ($("#TitleId").val() == '' || $("#TypeName").val() == '' || layedit.getText(editIndex) == '') {
+                        alert("不能为空");
+                        return false;
+                    }
+                    var typeInfo = {
+                        Title: $("#TitleId").val(),
+                        Abstract: $("#TypeName").val(),
+                        Remark: layedit.getText(editIndex)
+                    };
+                    $.ajax({
+                        type: "post",
+                        url: "/Blog/AddblogDate",
+                        data: { typeInfo },
+                        dataType: "json",
+                        success: function (msg) {
+                            console.log(msg);
+                           // console.log(data.data);
+                            //console.log(data.data.data);
+                            if (msg == 'Ok') {
+                                alert("添加成功")
+                                layer.msg("<a style='color: black'>添加成功</a>", { icon: 6 });
+                                
+                            }
+                            else { layer.msg("<a style='color: black'>添加失败</a>", { icon: 5 }); }
+                        }
+                    });
+                }
+            };
+
+            $("#demo1").click(function () {
+                //var data = $("#LAY_demo_editor").val();
+
+                var type = $(this).data('type');
+                active[type] ? active[type].call(this) : '';
+            })
+
+            //自定义验证规则
+            form.verify({
+                title: function (value) {
+                    if (value.length < 2) {
+                        return '标题至少得5个字符啊';
+                    }
+                }
+                , content: function (value) {
+                    layedit.sync(editIndex);
+                }
+            });
+
+            //layedit.getContent(index) //获取html
+
+
+            //监听指定开关
+            form.on('switch(switchTest)', function (data) {
+                layer.msg('开关checked：' + (this.checked ? 'true' : 'false'), {
+                    offset: '6px'
+                });
+                layer.tips('温馨提示：请注意开关状态的文字可以随意定义，而不仅仅是ON|OFF', data.othis)
+            });
+
+            //监听提交
+            form.on('button(demo1)', function (data) {
+                layer.alert(JSON.stringify(data.field), {
+                    title: '最终的提交信息',
+                })
+                return false;
+            });
+        });
+    </script>
+</body>
+</html>

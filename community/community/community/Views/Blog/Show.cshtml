@@ -1,0 +1,57 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Show</title>
+    <link href="~/Admin/lib/layui/css/layui.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script>
+        $(function () {
+            var imga = '@ViewData["img"]';
+            if (imga != '') {
+                var img = imga.split(',');
+                var optim = '';
+                for (var i = 0; i < img.length; i++) {
+                    optim += '<img src="' + img[i] + '" style="width:200px;height:200px;margin-top:5px;" /><br />';
+                }
+                $("#img").html(optim);
+            }
+        })
+    </script>
+</head>
+<body>
+    <div class="layui-card-body"></div>
+    <div class="layui-fluid">
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-md12">
+                <div class="layui-card">
+                    <div class="layui-card-body">
+                        <form class="layui-form layui-col-space5">
+                            <div class="layui-input-inline layui-show-xs-block">
+                                <a class="layui-btn layui-btn-sm layui-btn-danger" onclick="javascript:history.back(-1);">后退</a>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="layui-card">
+                        <div class="layui-card-body">
+                            <div style="text-align:center;">
+                                @ViewData["Title"]
+                                @ViewData["Abstract"]
+                                <div id="img"></div>
+
+                                @ViewData["Remark"]
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
