@@ -1,0 +1,13 @@
+anaconda:
+https://www.anaconda.com/
+
+Jupyter Notebook:
+https://jupyter.org/
+
+anaconda安装教程参考:
+https://www.cnblogs.com/sui776265233/p/11453004.html
+
+作业交付地址：
+模式识别第一次实验报告提交
+截止时间：2021-03-19 12:00
+提交地址：https://workspace.jianguoyun.com/inbox/collect/918b54f763204ff794ce9cac48cffabf/submit
